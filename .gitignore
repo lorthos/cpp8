@@ -1,0 +1,5 @@
+.idea/
+*.iml
+*.jpr
+roms/*.rom
+cmake-build-debug
