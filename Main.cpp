@@ -7,16 +7,15 @@ SDL_Renderer *mRenderer;
 
 bool InitializeWindow(int xres, int yres) {
 
+    mWindow = SDL_CreateWindow(
+            "CPP8",
+            SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+            xres,
+            yres,
+            SDL_WINDOW_SHOWN |
+            SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_OPENGL);
 
-    SDL_DisplayMode displayMode;
-    SDL_GetCurrentDisplayMode(0, &displayMode);
-    mWindow = SDL_CreateWindow(NULL, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                               xres,
-                               yres,
-                               SDL_WINDOW_SHOWN |
-                               SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_OPENGL);
-
-    mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED);
+    mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_TEXTUREACCESS_TARGET);
 
 
     if (!mWindow) {
@@ -30,6 +29,15 @@ bool InitializeWindow(int xres, int yres) {
 void Draw() {
     SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 0);
     SDL_RenderClear(mRenderer);
+
+    SDL_SetRenderDrawColor(mRenderer, 51, 255, 102, 0);
+    SDL_Rect r{};
+    r.x = 0;
+    r.y = 0;
+    r.w = 32;
+    r.h = 32;
+    SDL_RenderFillRect(mRenderer, &r);
+    SDL_RenderPresent(mRenderer);
 }
 
 int main(int argc, char **argv) {
@@ -44,8 +52,6 @@ int main(int argc, char **argv) {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT:
-                    mIsRunning = false;
-                    break;
                 case SDL_KEYDOWN:
                     mIsRunning = false;
                     break;
