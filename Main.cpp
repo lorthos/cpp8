@@ -2,10 +2,10 @@
 #include <SDL_system.h>
 #include <string>
 #include "Chip8.h"
+#include "Display.h"
 
 SDL_Window *mWindow;
 SDL_Renderer *mRenderer;
-const int DISPLAY_SCALE_FACTOR = 10;
 const std::string DISPLAY_WINDOW_TITLE = "CPP8";
 Chip8 c8{};
 
@@ -34,18 +34,21 @@ void Draw() {
     SDL_RenderClear(mRenderer);
 
     SDL_SetRenderDrawColor(mRenderer, 51, 255, 102, 0);
-    SDL_Rect r{};
-    r.x = 0;
-    r.y = 0;
-    r.w = 32;
-    r.h = 32;
-    SDL_RenderFillRect(mRenderer, &r);
+
+    c8.getDisplay().dSet(0,0);
+    c8.getDisplay().dSet(3,5);
+    c8.getDisplay().dSet(31,31);
+    c8.getDisplay().dSet(63,31);
+
+    c8.getDisplay().Draw(mRenderer);
+
     SDL_RenderPresent(mRenderer);
 }
 
 int main(int argc, char **argv) {
 
-    InitializeWindow(Chip8::DISPLAY_WIDTH * DISPLAY_SCALE_FACTOR, Chip8::DISPLAY_HEIGHT * DISPLAY_SCALE_FACTOR);
+    InitializeWindow(Display::DISPLAY_WIDTH * Display::DISPLAY_SCALE_FACTOR,
+                     Display::DISPLAY_HEIGHT * Display::DISPLAY_SCALE_FACTOR);
     bool mIsRunning = true;
 
     while (mIsRunning) {

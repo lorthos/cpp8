@@ -1,7 +1,7 @@
 project(core)
 
 set(ENGINE_FILES
-        Chip8.cpp Chip8.h Keyboard.cpp Keyboard.h Registers.cpp Registers.h)
+        Chip8.cpp Chip8.h Keyboard.cpp Keyboard.h Registers.cpp Registers.h Display.cpp Display.h)
 
 add_library(core_lib STATIC ${ENGINE_FILES})
 

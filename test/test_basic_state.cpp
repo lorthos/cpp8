@@ -56,4 +56,11 @@ TEST_CASE("default sprites") {
     REQUIRE(c8.mGet(4) == 0xf0);
 }
 
+TEST_CASE("display set") {
+    Chip8 c8{};
+    REQUIRE(c8.getDisplay().dIsSet(0,0) == false);
+    c8.getDisplay().dSet(0,0);
+    REQUIRE(c8.getDisplay().dIsSet(0,0) == true);
+
+}
 

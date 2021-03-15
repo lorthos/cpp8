@@ -3,7 +3,7 @@
 
 Chip8::Chip8() {
     std::fill_n(mMemory, MEMORY_SIZE, 0);
-    std::memcpy(mMemory, mDefaultSprites, sizeof(mDefaultSprites));
+    std::memcpy(&mMemory, mDefaultSprites, sizeof(mDefaultSprites));
 }
 
 void Chip8::mSet(int index, unsigned char val) {

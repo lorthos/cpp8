@@ -5,15 +5,13 @@
 #include <stack>
 #include "Keyboard.h"
 #include "Registers.h"
-
+#include "Display.h"
 
 
 class Chip8 {
 public:
     static const int MEMORY_SIZE = 4096;
     static const int STACK_SIZE = 16;
-    static const int DISPLAY_WIDTH = 64;
-    static const int DISPLAY_HEIGHT = 32;
 
     Chip8();
 
@@ -37,6 +35,11 @@ public:
     //keyboard
     Keyboard &getKeyboard() {
         return mKeyboard;
+    };
+
+    //display
+    Display &getDisplay() {
+        return mDisplay;
     };
 
 
@@ -81,5 +84,8 @@ private:
             0xf0, 0x80, 0xf0, 0x80, 0xf0,
             0xf0, 0x80, 0xf0, 0x80, 0x80
     };
+
+    //display
+    Display mDisplay;
 
 };
