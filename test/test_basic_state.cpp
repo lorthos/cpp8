@@ -6,8 +6,8 @@
 
 TEST_CASE("Memory Round trip") {
     Chip8 c8{};
-    c8.mSet(42, 'A');
-    unsigned char readValue = c8.mGet(42);
+    c8.mSet(4000, 'A');
+    unsigned char readValue = c8.mGet(4000);
     REQUIRE(readValue == 'A');
 }
 
@@ -46,4 +46,14 @@ TEST_CASE("Keyboard State") {
     c8.getKeyboard().kUp(0);
     REQUIRE(c8.getKeyboard().kIsDown(0) == 0);
 }
+
+TEST_CASE("default sprites") {
+    Chip8 c8{};
+    REQUIRE(c8.mGet(0) == 0xf0);
+    REQUIRE(c8.mGet(1) == 0x90);
+    REQUIRE(c8.mGet(2) == 0x90);
+    REQUIRE(c8.mGet(3) == 0x90);
+    REQUIRE(c8.mGet(4) == 0xf0);
+}
+
 

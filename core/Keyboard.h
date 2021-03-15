@@ -23,6 +23,8 @@ public:
 
     int lookUpDesktopKey(int desktopKey);
 
+    Keyboard();
+
 private:
     void checkState(int key);
 

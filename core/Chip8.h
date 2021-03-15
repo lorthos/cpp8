@@ -4,22 +4,8 @@
 
 #include <stack>
 #include "Keyboard.h"
+#include "Registers.h"
 
-
-/**
- * http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#2.2
- */
-class Registers {
-public:
-    // 16 general purpose 8-bit registers
-    bit8 V[16];
-    bit16 IRegister;
-    bit16 ProgramCounter;
-    //TODO can be removed
-    bit8 StackPointer = 0;
-    bit8 SoundTimer;
-    bit8 DelayTimer;
-};
 
 
 class Chip8 {
@@ -28,6 +14,8 @@ public:
     static const int STACK_SIZE = 16;
     static const int DISPLAY_WIDTH = 64;
     static const int DISPLAY_HEIGHT = 32;
+
+    Chip8();
 
     //memory
     void mSet(int index, unsigned char val);
@@ -59,7 +47,7 @@ private:
      *
      * capable of accessing up to 4KB (4,096 bytes) of RAM, from location 0x000 (0) to 0xFFF (4095).
      */
-    unsigned char mMemory[MEMORY_SIZE];
+    bit8 mMemory[MEMORY_SIZE];
 
     static void mPrecondition(int index);
 
@@ -73,5 +61,25 @@ private:
 
     //keyboard
     Keyboard mKeyboard;
+
+    //default sprites
+    static constexpr char mDefaultSprites[] = {
+            0xf0, 0x90, 0x90, 0x90, 0xf0,
+            0x20, 0x60, 0x20, 0x20, 0x70,
+            0xf0, 0x10, 0xf0, 0x80, 0xf0,
+            0xf0, 0x10, 0xf0, 0x10, 0xf0,
+            0x90, 0x90, 0xf0, 0x10, 0x10,
+            0xf0, 0x80, 0xf0, 0x10, 0xf0,
+            0xf0, 0x80, 0xf0, 0x90, 0xf0,
+            0xf0, 0x10, 0x20, 0x40, 0x40,
+            0xf0, 0x90, 0xf0, 0x90, 0xf0,
+            0xf0, 0x90, 0xf0, 0x10, 0xf0,
+            0xf0, 0x90, 0xf0, 0x90, 0x90,
+            0xe0, 0x90, 0xe0, 0x90, 0xe0,
+            0xf0, 0x80, 0x80, 0x80, 0xf0,
+            0xe0, 0x90, 0x90, 0x90, 0xe0,
+            0xf0, 0x80, 0xf0, 0x80, 0xf0,
+            0xf0, 0x80, 0xf0, 0x80, 0x80
+    };
 
 };

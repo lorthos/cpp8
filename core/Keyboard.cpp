@@ -4,6 +4,11 @@
 
 #include <assert.h>
 #include "Keyboard.h"
+#include <algorithm>
+
+Keyboard::Keyboard() {
+    std::fill_n(state, KEYBOARD_SIZE, false);
+}
 
 void Keyboard::kDown(int key) {
     checkState(key);
@@ -32,4 +37,5 @@ int Keyboard::lookUpDesktopKey(int desktopKey) {
     }
     return -1;
 }
+
 
