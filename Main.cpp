@@ -7,6 +7,7 @@ SDL_Window *mWindow;
 SDL_Renderer *mRenderer;
 const int DISPLAY_SCALE_FACTOR = 10;
 const std::string DISPLAY_WINDOW_TITLE = "CPP8";
+Chip8 c8{};
 
 bool InitializeWindow(int xres, int yres) {
     mWindow = SDL_CreateWindow(
@@ -43,6 +44,7 @@ void Draw() {
 }
 
 int main(int argc, char **argv) {
+
     InitializeWindow(Chip8::DISPLAY_WIDTH * DISPLAY_SCALE_FACTOR, Chip8::DISPLAY_HEIGHT * DISPLAY_SCALE_FACTOR);
     bool mIsRunning = true;
 
@@ -51,10 +53,28 @@ int main(int argc, char **argv) {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
-                case SDL_QUIT:
-                case SDL_KEYDOWN:
+                case SDL_QUIT: {
                     mIsRunning = false;
                     break;
+                }
+                case SDL_KEYDOWN: {
+                    if (SDLK_ESCAPE == event.key.keysym.sym) {
+                        mIsRunning = false;
+                        break;
+                    }
+                    auto c8KeyDown = c8.getKeyboard().lookUpDesktopKey(event.key.keysym.sym);
+                    if (-1 != c8KeyDown) {
+                        c8.getKeyboard().kDown(c8KeyDown);
+                    }
+                    break;
+                }
+                case SDL_KEYUP: {
+                    auto c8KeyUp = c8.getKeyboard().lookUpDesktopKey(event.key.keysym.sym);
+                    if (-1 != c8KeyUp) {
+                        c8.getKeyboard().kUp(c8KeyUp);
+                    }
+                    break;
+                }
                 default:
                     break;
             }

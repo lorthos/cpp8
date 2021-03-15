@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(cpp8)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
 set(OpenGL_GL_PREFERENCE LEGACY)
 
