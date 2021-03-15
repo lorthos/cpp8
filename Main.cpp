@@ -1,14 +1,16 @@
 #include <SDL.h>
 #include <SDL_system.h>
-
+#include <string>
+#include "Chip8.h"
 
 SDL_Window *mWindow;
 SDL_Renderer *mRenderer;
+const int DISPLAY_SCALE_FACTOR = 10;
+const std::string DISPLAY_WINDOW_TITLE = "CPP8";
 
 bool InitializeWindow(int xres, int yres) {
-
     mWindow = SDL_CreateWindow(
-            "CPP8",
+            DISPLAY_WINDOW_TITLE.c_str(),
             SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
             xres,
             yres,
@@ -41,9 +43,7 @@ void Draw() {
 }
 
 int main(int argc, char **argv) {
-    int x = 640;
-    int y = 320;
-    InitializeWindow(x, y);
+    InitializeWindow(Chip8::DISPLAY_WIDTH * DISPLAY_SCALE_FACTOR, Chip8::DISPLAY_HEIGHT * DISPLAY_SCALE_FACTOR);
     bool mIsRunning = true;
 
     while (mIsRunning) {

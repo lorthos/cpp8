@@ -1,17 +1,19 @@
 #define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
 
 #include "catch.hpp"
-#include "GameMath.h"
+#include "Chip8.h"
 
-using namespace GameMath;
 
-TEST_CASE("Summation") {
-    int a = 1;
-    int b = 2;
-    int c = 3;
+TEST_CASE("Memory Round trip") {
+    Chip8 c8{};
+    c8.mSet(42, 'A');
+    unsigned char readValue = c8.mGet(42);
+    REQUIRE(readValue == 'A');
+}
 
-    REQUIRE(c == GameMath::sum(a, b));
-
+TEST_CASE("Memory Boundaries") {
+    Chip8 c8{};
+    CHECK_THROWS(c8.mSet(424242, 'A'));
 }
 
 
