@@ -25,4 +25,17 @@ TEST_CASE("Register Round trip") {
     REQUIRE(c8.getRegisters().V[15] == 43);
 }
 
+TEST_CASE("Stack Round trip") {
+    Chip8 c8{};
+    REQUIRE(c8.sSize() == 0);
+    c8.sPush(42);
+    REQUIRE(c8.sSize() == 1);
+    c8.sPush(43);
+    REQUIRE(c8.sSize() == 2);
+    REQUIRE(c8.sPop() == 43);
+    REQUIRE(c8.sSize() == 1);
+    REQUIRE(c8.sPop() == 42);
+    REQUIRE(c8.sSize() == 0);
+}
+
 

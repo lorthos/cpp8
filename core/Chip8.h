@@ -2,6 +2,8 @@
 #define bit8 unsigned char
 #define bit16 unsigned short
 
+#include <stack>
+
 /**
  * http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#2.2
  */
@@ -21,6 +23,7 @@ class Chip8 {
 
 public:
     static const int MEMORY_SIZE = 4096;
+    static const int STACK_SIZE = 16;
     static const int DISPLAY_WIDTH = 64;
     static const int DISPLAY_HEIGHT = 32;
 
@@ -33,6 +36,13 @@ public:
     [[nodiscard]] Registers &getRegisters() {
         return mRegisters;
     };
+
+    //stack
+    void sPush(bit16 val);
+
+    bit16 sPop();
+
+    int sSize() { return mStack.size(); };
 
 
 private:
@@ -48,4 +58,9 @@ private:
 
     //registers
     Registers mRegisters;
+
+    //stack
+    std::stack<bit16> mStack;
+
+    void checkStackBoundary();
 };

@@ -14,3 +14,18 @@ unsigned char Chip8::mGet(int index) {
 void Chip8::mPrecondition(int index) {
     assert(index >= 0 && index < MEMORY_SIZE);
 }
+
+void Chip8::sPush(bit16 val) {
+    mStack.push(val);
+    checkStackBoundary();
+}
+
+bit16 Chip8::sPop() {
+    auto val = mStack.top();
+    mStack.pop();
+    return val;
+}
+
+void Chip8::checkStackBoundary() {
+    assert(mStack.size() <= STACK_SIZE);
+}
