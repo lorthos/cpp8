@@ -53,12 +53,11 @@ bool Display::DrawSprite(int x, int y, int spriteStart, int spriteSize, Memory &
                 continue;
             }
 
-//            screenBuffer[ly + y][lx + x] = true;
             if (screenBuffer[(ly + y) % DISPLAY_HEIGHT][(lx + x) % DISPLAY_WIDTH]) {
                 pixelChanged = true;
             }
 
-            screenBuffer[(ly + y) % DISPLAY_HEIGHT][(lx + x) % DISPLAY_WIDTH] = true;
+            screenBuffer[(ly + y) % DISPLAY_HEIGHT][(lx + x) % DISPLAY_WIDTH] ^= true;
         }
     }
     return pixelChanged;

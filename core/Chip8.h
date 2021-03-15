@@ -53,7 +53,6 @@ private:
 
     //stack
     std::stack<bit16> mStack;
-
     void checkStackBoundary();
 
     //keyboard

@@ -23,6 +23,10 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR})
 target_link_libraries(cpp8 ${SDL2_LIBRARY})
 
+find_package(SDL2_MIXER REQUIRED)
+include_directories(${SDL2_MIXER_INCLUDE_DIR})
+target_link_libraries(cpp8 ${SDL2_MIXER_LIBRARY})
+
 if (APPLE)
     SET(CMAKE_EXE_LINKER_FLAGS "-framework Foundation -w")
     target_link_libraries(cpp8 "-framework OpenGL")

@@ -1,8 +1,10 @@
 #include <SDL.h>
 #include <SDL_system.h>
+#include <SDL_mixer.h>
 #include <string>
 #include "Chip8.h"
 #include "Display.h"
+#include <iostream>
 
 SDL_Window *mWindow;
 SDL_Renderer *mRenderer;
@@ -41,9 +43,23 @@ void Draw() {
     c8.getDisplay().Render(mRenderer);
 
     SDL_RenderPresent(mRenderer);
+
+    if (c8.getRegisters().DelayTimer > 0) {
+        SDL_Delay(10);
+        c8.getRegisters().DelayTimer--;
+    }
+
+    if (c8.getRegisters().SoundTimer > 0) {
+        SDL_Delay(10);
+//        std::cout << "\007";
+//        std::system("tput bel"); ->rings bell when launched from term
+        c8.getRegisters().SoundTimer--;
+    }
 }
 
 int main(int argc, char **argv) {
+
+    SDL_Init(SDL_INIT_EVERYTHING);
 
     InitializeWindow(Display::DISPLAY_WIDTH * Display::DISPLAY_SCALE_FACTOR,
                      Display::DISPLAY_HEIGHT * Display::DISPLAY_SCALE_FACTOR);
@@ -54,6 +70,9 @@ int main(int argc, char **argv) {
     c8.getDisplay().DrawSprite(20, 20, 10, 5, c8.getMemory());
     c8.getDisplay().DrawSprite(30, 20, 15, 5, c8.getMemory());
     c8.getDisplay().DrawSprite(40, 20, 20, 5, c8.getMemory());
+
+    c8.getRegisters().DelayTimer = 10;
+    c8.getRegisters().SoundTimer = 10;
 
     while (mIsRunning) {
         // process input
