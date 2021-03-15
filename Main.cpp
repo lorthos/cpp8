@@ -35,12 +35,10 @@ void Draw() {
 
     SDL_SetRenderDrawColor(mRenderer, 51, 255, 102, 0);
 
-    c8.getDisplay().dSet(0,0);
-    c8.getDisplay().dSet(3,5);
-    c8.getDisplay().dSet(31,31);
-    c8.getDisplay().dSet(63,31);
+//    c8.getDisplay().dSet(0, 0);
+//    c8.getDisplay().dSet(63, 31);
 
-    c8.getDisplay().Draw(mRenderer);
+    c8.getDisplay().Render(mRenderer);
 
     SDL_RenderPresent(mRenderer);
 }
@@ -50,6 +48,12 @@ int main(int argc, char **argv) {
     InitializeWindow(Display::DISPLAY_WIDTH * Display::DISPLAY_SCALE_FACTOR,
                      Display::DISPLAY_HEIGHT * Display::DISPLAY_SCALE_FACTOR);
     bool mIsRunning = true;
+
+    c8.getDisplay().DrawSprite(0, 0, 0, 5, c8.getMemory());
+    c8.getDisplay().DrawSprite(10, 10, 5, 5, c8.getMemory());
+    c8.getDisplay().DrawSprite(20, 20, 10, 5, c8.getMemory());
+    c8.getDisplay().DrawSprite(30, 20, 15, 5, c8.getMemory());
+    c8.getDisplay().DrawSprite(40, 20, 20, 5, c8.getMemory());
 
     while (mIsRunning) {
         // process input

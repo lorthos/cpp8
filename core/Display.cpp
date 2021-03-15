@@ -27,7 +27,7 @@ void Display::preCondition(int x, int y) {
     assert(0 <= x && x < DISPLAY_WIDTH && 0 <= y && y <= DISPLAY_HEIGHT);
 }
 
-void Display::Draw(SDL_Renderer *renderer) {
+void Display::Render(SDL_Renderer *renderer) {
     for (int x = 0; x < DISPLAY_WIDTH; ++x) {
         for (int y = 0; y < DISPLAY_HEIGHT; ++y) {
             if (dIsSet(x, y)) {
@@ -41,4 +41,25 @@ void Display::Draw(SDL_Renderer *renderer) {
             }
         }
     }
+}
+
+bool Display::DrawSprite(int x, int y, int spriteStart, int spriteSize, Memory &memory) {
+    bool pixelChanged = false;
+
+    for (int ly = 0; ly < spriteSize; ++ly) {
+        unsigned char c = memory.mGet(spriteStart + ly);
+        for (int lx = 0; lx < 8; ++lx) {
+            if ((c & (0b10000000 >> lx)) == 0) {
+                continue;
+            }
+
+//            screenBuffer[ly + y][lx + x] = true;
+            if (screenBuffer[(ly + y) % DISPLAY_HEIGHT][(lx + x) % DISPLAY_WIDTH]) {
+                pixelChanged = true;
+            }
+
+            screenBuffer[(ly + y) % DISPLAY_HEIGHT][(lx + x) % DISPLAY_WIDTH] = true;
+        }
+    }
+    return pixelChanged;
 }

@@ -2,13 +2,16 @@
 
 #include <SDL.h>
 #include <SDL_system.h>
+#include "Memory.h"
 
 class Display {
 
 public:
     Display();
 
-    void Draw(SDL_Renderer *renderer);
+    void Render(SDL_Renderer *renderer);
+
+    bool DrawSprite(int x, int y, int spriteStart, int spriteSize, Memory &memory);
 
     void dSet(int x, int y);
 

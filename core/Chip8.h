@@ -3,6 +3,7 @@
 #define bit16 unsigned short
 
 #include <stack>
+#include "Memory.h"
 #include "Keyboard.h"
 #include "Registers.h"
 #include "Display.h"
@@ -10,15 +11,15 @@
 
 class Chip8 {
 public:
-    static const int MEMORY_SIZE = 4096;
+
     static const int STACK_SIZE = 16;
 
     Chip8();
 
     //memory
-    void mSet(int index, unsigned char val);
-
-    unsigned char mGet(int index);
+    Memory &getMemory() {
+        return mMemory;
+    };
 
     //registers
     [[nodiscard]] Registers &getRegisters() {
@@ -44,16 +45,9 @@ public:
 
 
 private:
+
     //memory
-    /**
-     * http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#memmap
-     *
-     * capable of accessing up to 4KB (4,096 bytes) of RAM, from location 0x000 (0) to 0xFFF (4095).
-     */
-    bit8 mMemory[MEMORY_SIZE];
-
-    static void mPrecondition(int index);
-
+    Memory mMemory;
     //registers
     Registers mRegisters;
 
@@ -64,26 +58,6 @@ private:
 
     //keyboard
     Keyboard mKeyboard;
-
-    //default sprites
-    static constexpr char mDefaultSprites[] = {
-            0xf0, 0x90, 0x90, 0x90, 0xf0,
-            0x20, 0x60, 0x20, 0x20, 0x70,
-            0xf0, 0x10, 0xf0, 0x80, 0xf0,
-            0xf0, 0x10, 0xf0, 0x10, 0xf0,
-            0x90, 0x90, 0xf0, 0x10, 0x10,
-            0xf0, 0x80, 0xf0, 0x10, 0xf0,
-            0xf0, 0x80, 0xf0, 0x90, 0xf0,
-            0xf0, 0x10, 0x20, 0x40, 0x40,
-            0xf0, 0x90, 0xf0, 0x90, 0xf0,
-            0xf0, 0x90, 0xf0, 0x10, 0xf0,
-            0xf0, 0x90, 0xf0, 0x90, 0x90,
-            0xe0, 0x90, 0xe0, 0x90, 0xe0,
-            0xf0, 0x80, 0x80, 0x80, 0xf0,
-            0xe0, 0x90, 0x90, 0x90, 0xe0,
-            0xf0, 0x80, 0xf0, 0x80, 0xf0,
-            0xf0, 0x80, 0xf0, 0x80, 0x80
-    };
 
     //display
     Display mDisplay;
