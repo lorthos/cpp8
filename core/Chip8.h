@@ -11,10 +11,17 @@
 
 class Chip8 {
 public:
+    Chip8();
+
+    void runInstruction(bit16 opcode);
+
+    static std::pair<char *, long> readRom(const std::string& romPath);
+
+    void loadRom(const char *rom, long size);
+
+    void loadPrecondition(long size);
 
     static const int STACK_SIZE = 16;
-
-    Chip8();
 
     //memory
     Memory &getMemory() {
@@ -43,7 +50,6 @@ public:
         return mDisplay;
     };
 
-
 private:
 
     //memory
@@ -53,6 +59,7 @@ private:
 
     //stack
     std::stack<bit16> mStack;
+
     void checkStackBoundary();
 
     //keyboard

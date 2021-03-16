@@ -3,7 +3,7 @@ project(test)
 add_executable(
         run_tests
         catch.hpp
-        test_basic_state.cpp)
+        test_basic_state.cpp test_load_rom.cpp)
 
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR})

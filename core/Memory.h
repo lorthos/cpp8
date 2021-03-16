@@ -13,7 +13,7 @@ public:
 
     unsigned char mGet(int index);
 
-    [[nodiscard]] const unsigned char *getMemory() const {
+    [[nodiscard]] unsigned char *getMemory() {
         return mMemory;
     };
 private:

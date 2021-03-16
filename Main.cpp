@@ -4,12 +4,34 @@
 #include <string>
 #include "Chip8.h"
 #include "Display.h"
-#include <iostream>
 
 SDL_Window *mWindow;
 SDL_Renderer *mRenderer;
 const std::string DISPLAY_WINDOW_TITLE = "CPP8";
 Chip8 c8{};
+Mix_Chunk *beepSound = NULL;
+
+
+
+bool InitializeAudio(std::string wavPath) {
+    SDL_AudioSpec wavSpec;
+    SDL_Init(SDL_INIT_AUDIO);
+
+    //Initialize SDL_mixer
+    if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) {
+        return false;
+    }
+
+    //Load the sound effects
+    beepSound = Mix_LoadWAV(wavPath.c_str());
+    //If there was a problem loading the sound effects
+    if (beepSound == nullptr) {
+        return false;
+    }
+
+    return true;
+}
+
 
 bool InitializeWindow(int xres, int yres) {
     mWindow = SDL_CreateWindow(
@@ -34,25 +56,18 @@ bool InitializeWindow(int xres, int yres) {
 void Draw() {
     SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 0);
     SDL_RenderClear(mRenderer);
-
     SDL_SetRenderDrawColor(mRenderer, 51, 255, 102, 0);
 
-//    c8.getDisplay().dSet(0, 0);
-//    c8.getDisplay().dSet(63, 31);
-
     c8.getDisplay().Render(mRenderer);
-
     SDL_RenderPresent(mRenderer);
 
     if (c8.getRegisters().DelayTimer > 0) {
         SDL_Delay(10);
         c8.getRegisters().DelayTimer--;
     }
-
     if (c8.getRegisters().SoundTimer > 0) {
         SDL_Delay(10);
-//        std::cout << "\007";
-//        std::system("tput bel"); ->rings bell when launched from term
+        Mix_PlayChannel(-1, beepSound, 0);
         c8.getRegisters().SoundTimer--;
     }
 }
@@ -63,16 +78,21 @@ int main(int argc, char **argv) {
 
     InitializeWindow(Display::DISPLAY_WIDTH * Display::DISPLAY_SCALE_FACTOR,
                      Display::DISPLAY_HEIGHT * Display::DISPLAY_SCALE_FACTOR);
+    InitializeAudio("./assets/sfx_sounds_Blip1.wav");
     bool mIsRunning = true;
 
-    c8.getDisplay().DrawSprite(0, 0, 0, 5, c8.getMemory());
-    c8.getDisplay().DrawSprite(10, 10, 5, 5, c8.getMemory());
-    c8.getDisplay().DrawSprite(20, 20, 10, 5, c8.getMemory());
-    c8.getDisplay().DrawSprite(30, 20, 15, 5, c8.getMemory());
-    c8.getDisplay().DrawSprite(40, 20, 20, 5, c8.getMemory());
+    const std::pair<char *, long> &pair = Chip8::readRom("./roms/test.txt");
+    c8.loadRom(pair.first, pair.second);
 
-    c8.getRegisters().DelayTimer = 10;
-    c8.getRegisters().SoundTimer = 10;
+
+//    c8.getDisplay().DrawSprite(0, 0, 0, 5, c8.getMemory());
+//    c8.getDisplay().DrawSprite(10, 10, 5, 5, c8.getMemory());
+//    c8.getDisplay().DrawSprite(20, 20, 10, 5, c8.getMemory());
+//    c8.getDisplay().DrawSprite(30, 20, 15, 5, c8.getMemory());
+//    c8.getDisplay().DrawSprite(40, 20, 20, 5, c8.getMemory());
+//
+//    c8.getRegisters().DelayTimer = 10;
+//    c8.getRegisters().SoundTimer = 10;
 
     while (mIsRunning) {
         // process input
@@ -113,6 +133,7 @@ int main(int argc, char **argv) {
 
     SDL_DestroyRenderer(mRenderer);
     SDL_DestroyWindow(mWindow);
+    Mix_CloseAudio();
     SDL_Quit();
 
     return 0;
