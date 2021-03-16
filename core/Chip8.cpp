@@ -88,6 +88,7 @@ void Chip8::runInstructionBasic(unsigned short opcode) {
     bit8 Vx = (opcode >> 8) & 0x000f;
     bit8 Vy = (opcode >> 4) & 0x000f;
     bit8 kk = opcode & 0x00ff;
+    std::random_device engine;
     switch (opcode & 0xf000) {
         //1nnn - JP addr
         //Jump to location nnn.
@@ -150,6 +151,24 @@ void Chip8::runInstructionBasic(unsigned short opcode) {
             }
             break;
 
+            //Annn - LD I, addr
+            //Set I = nnn.
+        case 0xA000:
+            getRegisters().IRegister = nnn;
+            break;
+
+            //Bnnn - JP V0, addr
+            //Jump to location nnn + V0.
+        case 0xB000:
+            getRegisters().ProgramCounter = nnn + getRegisters().V[0x00];
+            break;
+
+            //Cxkk - RND Vx, byte
+            //Set Vx = random byte AND kk.
+        case 0xC000:
+            //TODO
+            unsigned x = engine();
+            break;
 
         default:
             break;
