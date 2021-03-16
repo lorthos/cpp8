@@ -76,3 +76,37 @@ TEST_CASE("run instruction OR Vx, Vy") {
     c8.runInstruction(0x8011);
     REQUIRE(c8.getRegisters().V[0] == 1);
 }
+
+TEST_CASE("run instruction AND Vx, Vy") {
+    Chip8 c8{};
+    c8.getRegisters().V[0] = 1;
+    c8.runInstruction(0x8012);
+    REQUIRE(c8.getRegisters().V[0] == 0);
+}
+
+TEST_CASE("run instruction XOR Vx, Vy") {
+    Chip8 c8{};
+    c8.getRegisters().V[1] = 1;
+    c8.runInstruction(0x8013);
+    REQUIRE(c8.getRegisters().V[0] == 1);
+}
+
+TEST_CASE("run instruction ADD Vx, Vy, carry = 0") {
+    Chip8 c8{};
+    REQUIRE(c8.getRegisters().V[0x0f] == 0);
+    c8.getRegisters().V[0] = 0x01;
+    c8.getRegisters().V[1] = 0x02;
+    c8.runInstruction(0x8014);
+    REQUIRE(c8.getRegisters().V[0x0f] == 0);
+    REQUIRE(c8.getRegisters().V[0] == 3);
+}
+
+TEST_CASE("run instruction ADD Vx, Vy, carry = 1") {
+    Chip8 c8{};
+    REQUIRE(c8.getRegisters().V[0x0f] == 0);
+    c8.getRegisters().V[0] = 200;
+    c8.getRegisters().V[1] = 200;
+    c8.runInstruction(0x8014);
+    REQUIRE(c8.getRegisters().V[0x0f] == 1);
+    REQUIRE(c8.getRegisters().V[0] == (400 & 0x00ff));
+}

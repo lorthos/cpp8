@@ -152,6 +152,7 @@ void Chip8::runInstruction8SET(unsigned short opcode) {
     bit8 Vx = (opcode >> 8) & 0x000f;
     bit8 Vy = (opcode >> 4) & 0x000f;
     bit8 lastDigit = opcode & 0x000f;
+    bit16 buff;
     switch (lastDigit) {
         //8xy0 - LD Vx, Vy
         //Set Vx = Vy.
@@ -159,8 +160,50 @@ void Chip8::runInstruction8SET(unsigned short opcode) {
             getRegisters().V[Vx] = getRegisters().V[Vy];
             break;
 
+            //8xy1 - OR Vx, Vy
+            //Set Vx = Vx OR Vy.
         case 0x01:
             getRegisters().V[Vx] = getRegisters().V[Vx] | getRegisters().V[Vy];
+            break;
+
+            //8xy2 - AND Vx, Vy
+            //Set Vx = Vx AND Vy.
+        case 0x02:
+            getRegisters().V[Vx] = getRegisters().V[Vx] & getRegisters().V[Vy];
+            break;
+
+            //8xy3 - XOR Vx, Vy
+            //Set Vx = Vx XOR Vy.l
+        case 0x03:
+            getRegisters().V[Vx] = getRegisters().V[Vx] ^ getRegisters().V[Vy];
+            break;
+
+            //8xy4 - ADD Vx, Vy
+            //Set Vx = Vx + Vy, set VF = carry.
+        case 0x04:
+            buff = getRegisters().V[Vx] + getRegisters().V[Vy];
+            getRegisters().V[0x0f] = buff > 0xff ? 1 : 0;
+            getRegisters().V[Vx] = buff;
+            break;
+
+            //8xy5 - SUB Vx, Vy
+            //Set Vx = Vx - Vy, set VF = NOT borrow.
+        case 0x05:
+            break;
+
+            //8xy6 - SHR Vx {, Vy}
+            //Set Vx = Vx SHR 1.
+        case 0x06:
+            break;
+
+            //8xy7 - SUBN Vx, Vy
+            //Set Vx = Vy - Vx, set VF = NOT borrow.
+        case 0x07:
+            break;
+
+            //8xyE - SHL Vx {, Vy}
+            //Set Vx = Vx SHL 1.
+        case 0x0E:
             break;
 
     }
