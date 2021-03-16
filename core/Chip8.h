@@ -12,14 +12,9 @@
 class Chip8 {
 public:
     Chip8();
-
-    void runInstruction(bit16 opcode);
-
+    void tick();
     static std::pair<char *, long> readRom(const std::string& romPath);
-
     void loadRom(const char *rom, long size);
-
-    void loadPrecondition(long size);
 
     static const int STACK_SIZE = 16;
 
@@ -51,6 +46,10 @@ public:
     };
 
 private:
+    void loadPrecondition(long size);
+    void runInstruction(bit16 opcode);
+    void runInstructionBasic(bit16 opcode);
+    void runInstruction8SET(bit16 opcode);
 
     //memory
     Memory mMemory{};

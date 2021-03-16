@@ -8,9 +8,7 @@
 
 
 Display::Display() {
-    for (int i = 0; i < DISPLAY_HEIGHT; ++i) {
-        std::fill_n(screenBuffer[i], DISPLAY_WIDTH, false);
-    }
+    clear();
 }
 
 void Display::dSet(int x, int y) {
@@ -61,4 +59,10 @@ bool Display::DrawSprite(int x, int y, int spriteStart, int spriteSize, Memory &
         }
     }
     return pixelChanged;
+}
+
+void Display::clear() {
+    for (int i = 0; i < DISPLAY_HEIGHT; ++i) {
+        std::fill_n(screenBuffer[i], DISPLAY_WIDTH, false);
+    }
 }

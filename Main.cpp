@@ -70,9 +70,7 @@ void Update() {
         c8.getRegisters().SoundTimer--;
     }
 
-    unsigned short opCode = c8.getMemory().getOpCode(c8.getRegisters().ProgramCounter);
-    c8.runInstruction(opCode);
-    c8.getRegisters().ProgramCounter += 2;
+    c8.tick();
 }
 
 int main(int argc, char **argv) {
@@ -86,6 +84,7 @@ int main(int argc, char **argv) {
 
     const std::pair<char *, long> &pair = Chip8::readRom("./roms/INVADERS");
     c8.loadRom(pair.first, pair.second);
+
 
 //    c8.getDisplay().DrawSprite(0, 0, 0, 5, c8.getMemory());
 //    c8.getDisplay().DrawSprite(10, 10, 5, 5, c8.getMemory());

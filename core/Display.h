@@ -17,6 +17,8 @@ public:
 
     bool dIsSet(int x, int y);
 
+    void clear();
+
     static const int DISPLAY_WIDTH = 64;
     static const int DISPLAY_HEIGHT = 32;
     static const int DISPLAY_SCALE_FACTOR = 10;
