@@ -13,9 +13,8 @@ public:
 
     unsigned char mGet(int index);
 
-    [[nodiscard]] unsigned char *getMemory() {
-        return mMemory;
-    };
+    void copyTo(const char *rom, long size, int startAddress = 0);
+
 private:
 
     //memory
@@ -24,7 +23,7 @@ private:
      *
      * capable of accessing up to 4KB (4,096 bytes) of RAM, from location 0x000 (0) to 0xFFF (4095).
      */
-    bit8 mMemory[MEMORY_SIZE]{};
+    bit8 heap[MEMORY_SIZE]{};
 
     static void mPrecondition(int index);
 

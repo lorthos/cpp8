@@ -7,21 +7,25 @@
 #include <algorithm>
 
 Memory::Memory() {
-    std::fill_n(mMemory, MEMORY_SIZE, 0);
-    std::memcpy(&mMemory, mDefaultSprites, sizeof(mDefaultSprites));
+    std::fill_n(heap, MEMORY_SIZE, 0);
+    std::memcpy(&heap, mDefaultSprites, sizeof(mDefaultSprites));
 }
 
 
 void Memory::mSet(int index, unsigned char val) {
     mPrecondition(index);
-    mMemory[index] = val;
+    heap[index] = val;
 }
 
 unsigned char Memory::mGet(int index) {
     mPrecondition(index);
-    return mMemory[index];
+    return heap[index];
 }
 
 void Memory::mPrecondition(int index) {
     assert(index >= 0 && index < MEMORY_SIZE);
+}
+
+void Memory::copyTo(const char *rom, long size, int startAddress) {
+    std::memcpy(&heap[startAddress], rom, size);
 }

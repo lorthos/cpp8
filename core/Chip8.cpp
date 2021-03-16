@@ -28,8 +28,7 @@ void Chip8::checkStackBoundary() {
 
 void Chip8::loadRom(const char *rom, long size) {
     loadPrecondition(size);
-    unsigned char dst = getMemory().getMemory()[LOAD_ADDRESS];
-    std::memcpy(&dst, rom, size);
+    mMemory.copyTo(rom, size, LOAD_ADDRESS);
     getRegisters().ProgramCounter = LOAD_ADDRESS;
 }
 
@@ -38,7 +37,7 @@ void Chip8::loadPrecondition(long size) {
 
 }
 
-std::pair<char *, long> Chip8::readRom(const std::string& romPath) {
+std::pair<char *, long> Chip8::readRom(const std::string &romPath) {
     FILE *f = std::fopen(romPath.c_str(), "rb");
     fseek(f, 0, SEEK_END);
     long fsize = ftell(f);

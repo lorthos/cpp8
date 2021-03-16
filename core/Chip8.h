@@ -53,7 +53,7 @@ public:
 private:
 
     //memory
-    Memory mMemory;
+    Memory mMemory{};
     //registers
     Registers mRegisters;
 
