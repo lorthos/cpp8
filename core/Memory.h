@@ -9,11 +9,13 @@ public:
 
     static const int MEMORY_SIZE = 4096;
 
-    void mSet(int index, unsigned char val);
+    void set(int index, unsigned char val);
 
-    unsigned char mGet(int index);
+    bit8 get(int index);
 
     void copyTo(const char *rom, long size, int startAddress = 0);
+
+    bit16 getOpCode(int index);
 
 private:
 

@@ -51,4 +51,8 @@ std::pair<char *, long> Chip8::readRom(const std::string &romPath) {
     return std::pair<char *, long>{contents, fsize};
 }
 
+void Chip8::runInstruction(unsigned short opcode) {
+
+}
+
 

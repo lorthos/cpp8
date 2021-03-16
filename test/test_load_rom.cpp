@@ -15,10 +15,10 @@ TEST_CASE("load rom from file") {
     REQUIRE(5 == pair.second);
     REQUIRE(std::string(pair.first) == "12345");
     c8.loadRom(pair.first, pair.second);
-    REQUIRE('1' == c8.getMemory().mGet(0x200));
-    REQUIRE('2' == c8.getMemory().mGet(0x201));
-    REQUIRE('3' == c8.getMemory().mGet(0x202));
-    REQUIRE('4' == c8.getMemory().mGet(0x203));
-    REQUIRE('5' == c8.getMemory().mGet(0x204));
-    REQUIRE(0 == c8.getMemory().mGet(0x205));
+    REQUIRE('1' == c8.getMemory().get(0x200));
+    REQUIRE('2' == c8.getMemory().get(0x201));
+    REQUIRE('3' == c8.getMemory().get(0x202));
+    REQUIRE('4' == c8.getMemory().get(0x203));
+    REQUIRE('5' == c8.getMemory().get(0x204));
+    REQUIRE(0 == c8.getMemory().get(0x205));
 }

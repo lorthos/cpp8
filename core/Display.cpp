@@ -47,7 +47,7 @@ bool Display::DrawSprite(int x, int y, int spriteStart, int spriteSize, Memory &
     bool pixelChanged = false;
 
     for (int ly = 0; ly < spriteSize; ++ly) {
-        unsigned char c = memory.mGet(spriteStart + ly);
+        unsigned char c = memory.get(spriteStart + ly);
         for (int lx = 0; lx < 8; ++lx) {
             if ((c & (0b10000000 >> lx)) == 0) {
                 continue;

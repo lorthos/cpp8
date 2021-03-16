@@ -12,7 +12,6 @@ Chip8 c8{};
 Mix_Chunk *beepSound = NULL;
 
 
-
 bool InitializeAudio(std::string wavPath) {
     SDL_AudioSpec wavSpec;
     SDL_Init(SDL_INIT_AUDIO);
@@ -53,7 +52,7 @@ bool InitializeWindow(int xres, int yres) {
     return true;
 }
 
-void Draw() {
+void Update() {
     SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 0);
     SDL_RenderClear(mRenderer);
     SDL_SetRenderDrawColor(mRenderer, 51, 255, 102, 0);
@@ -70,6 +69,10 @@ void Draw() {
         Mix_PlayChannel(-1, beepSound, 0);
         c8.getRegisters().SoundTimer--;
     }
+
+    unsigned short opCode = c8.getMemory().getOpCode(c8.getRegisters().ProgramCounter);
+    c8.runInstruction(opCode);
+    c8.getRegisters().ProgramCounter += 2;
 }
 
 int main(int argc, char **argv) {
@@ -81,9 +84,8 @@ int main(int argc, char **argv) {
     InitializeAudio("./assets/sfx_sounds_Blip1.wav");
     bool mIsRunning = true;
 
-    const std::pair<char *, long> &pair = Chip8::readRom("./roms/test.txt");
+    const std::pair<char *, long> &pair = Chip8::readRom("./roms/INVADERS");
     c8.loadRom(pair.first, pair.second);
-
 
 //    c8.getDisplay().DrawSprite(0, 0, 0, 5, c8.getMemory());
 //    c8.getDisplay().DrawSprite(10, 10, 5, 5, c8.getMemory());
@@ -127,7 +129,7 @@ int main(int argc, char **argv) {
         }
         // update state
         // generate output
-        Draw();
+        Update();
     }
 
 

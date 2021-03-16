@@ -12,12 +12,12 @@ Memory::Memory() {
 }
 
 
-void Memory::mSet(int index, unsigned char val) {
+void Memory::set(int index, unsigned char val) {
     mPrecondition(index);
     heap[index] = val;
 }
 
-unsigned char Memory::mGet(int index) {
+unsigned char Memory::get(int index) {
     mPrecondition(index);
     return heap[index];
 }
@@ -28,4 +28,10 @@ void Memory::mPrecondition(int index) {
 
 void Memory::copyTo(const char *rom, long size, int startAddress) {
     std::memcpy(&heap[startAddress], rom, size);
+}
+
+bit16 Memory::getOpCode(int index) {
+    bit8 byte1 = get(index);
+    bit8 byte2 = get(index + 1);
+    return byte1 << 8 | byte2;
 }
