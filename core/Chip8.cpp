@@ -143,6 +143,14 @@ void Chip8::runInstructionBasic(unsigned short opcode) {
             runInstruction8SET(opcode);
             break;
 
+            //SNE_VX_VY
+        case 0x9000:
+            if (getRegisters().V[Vx] != getRegisters().V[Vy]) {
+                getRegisters().ProgramCounter += 2;
+            }
+            break;
+
+
         default:
             break;
     }
@@ -189,21 +197,29 @@ void Chip8::runInstruction8SET(unsigned short opcode) {
             //8xy5 - SUB Vx, Vy
             //Set Vx = Vx - Vy, set VF = NOT borrow.
         case 0x05:
+            getRegisters().V[0x0f] = getRegisters().V[Vx] > getRegisters().V[Vy] ? 1 : 0;
+            getRegisters().V[Vx] = getRegisters().V[Vx] - getRegisters().V[Vy];
             break;
 
             //8xy6 - SHR Vx {, Vy}
             //Set Vx = Vx SHR 1.
         case 0x06:
+            getRegisters().V[0x0f] = getRegisters().V[Vx] & 0x01;
+            getRegisters().V[Vx] /= 2;
             break;
 
             //8xy7 - SUBN Vx, Vy
             //Set Vx = Vy - Vx, set VF = NOT borrow.
         case 0x07:
+            getRegisters().V[0x0f] = getRegisters().V[Vy] > getRegisters().V[Vx];
+            getRegisters().V[Vx] = getRegisters().V[Vy] - getRegisters().V[Vx];
             break;
 
             //8xyE - SHL Vx {, Vy}
             //Set Vx = Vx SHL 1.
         case 0x0E:
+            getRegisters().V[0x0f] = (getRegisters().V[Vx] & 0b10000000) ? 1 : 0;
+            getRegisters().V[Vx] *= 2;
             break;
 
     }

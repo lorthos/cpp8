@@ -110,3 +110,106 @@ TEST_CASE("run instruction ADD Vx, Vy, carry = 1") {
     REQUIRE(c8.getRegisters().V[0x0f] == 1);
     REQUIRE(c8.getRegisters().V[0] == (400 & 0x00ff));
 }
+
+TEST_CASE("run instruction SUB Vx, Vy, borrow = 1") {
+    //set VF = Not borrow
+    Chip8 c8{};
+    REQUIRE(c8.getRegisters().V[0x0f] == 0);
+    c8.getRegisters().V[0] = 200;
+    c8.getRegisters().V[1] = 100;
+    c8.runInstruction(0x8015);
+    REQUIRE(c8.getRegisters().V[0x0f] == 1);
+    REQUIRE(c8.getRegisters().V[0] == 100);
+}
+
+TEST_CASE("run instruction SUB Vx, Vy, borrow = 0") {
+    //set VF = Not borrow
+    Chip8 c8{};
+    REQUIRE(c8.getRegisters().V[0x0f] == 0);
+    c8.getRegisters().V[0] = 0;
+    c8.getRegisters().V[1] = 6;
+    c8.runInstruction(0x8015);
+    REQUIRE(c8.getRegisters().V[0x0f] == 0);
+    REQUIRE(c8.getRegisters().V[0] == 0xfa); //256-6 = 250
+}
+
+TEST_CASE("run instruction SHR Vx {, Vy}, no remainder") {
+    //set VF = Not borrow
+    Chip8 c8{};
+    c8.getRegisters().V[0] = 10;
+    c8.getRegisters().V[1] = 2;
+    c8.runInstruction(0x8016);
+    REQUIRE(c8.getRegisters().V[0x0f] == 0);
+    REQUIRE(c8.getRegisters().V[0] == 0x05);
+}
+
+TEST_CASE("run instruction SHR Vx {, Vy} with remainder") {
+    //set VF = Not borrow
+    Chip8 c8{};
+    c8.getRegisters().V[0] = 11;
+    c8.getRegisters().V[1] = 2;
+    c8.runInstruction(0x8016);
+    REQUIRE(c8.getRegisters().V[0x0f] == 1);
+    REQUIRE(c8.getRegisters().V[0] == 0x05);
+}
+
+TEST_CASE("run instruction SUBN Vx, Vy, no borrow") {
+    //set VF = Not borrow
+    Chip8 c8{};
+    c8.getRegisters().V[0] = 2;
+    c8.getRegisters().V[1] = 5;
+    c8.runInstruction(0x8017);
+    REQUIRE(c8.getRegisters().V[0x0f] == 1);
+    REQUIRE(c8.getRegisters().V[0] == 0x03);
+}
+
+TEST_CASE("run instruction SUBN Vx, Vy, with borrow") {
+    //set VF = Not borrow
+    Chip8 c8{};
+    c8.getRegisters().V[0] = 5;
+    c8.getRegisters().V[1] = 2;
+    c8.runInstruction(0x8017);
+    REQUIRE(c8.getRegisters().V[0x0f] == 0);
+    REQUIRE(c8.getRegisters().V[0] == 0xfd);
+}
+
+TEST_CASE("run instruction SHL Vx {, Vy} vf=0") {
+    //set VF = Not borrow
+    Chip8 c8{};
+    c8.getRegisters().V[0] = 0b00000010;
+    c8.runInstruction(0x800E);
+    REQUIRE(c8.getRegisters().V[0x0f] == 0);
+    REQUIRE(c8.getRegisters().V[0] == 0x04);
+}
+
+TEST_CASE("run instruction SHL Vx {, Vy} vf=1") {
+    //If the most-significant bit of Vx is 1, then VF is set to 1,
+    // otherwise to 0. Then Vx is multiplied by 2.
+    Chip8 c8{};
+    c8.getRegisters().V[0] = 0b10000001;
+    c8.runInstruction(0x801E);
+    REQUIRE(c8.getRegisters().V[0x0f] == 1);
+    REQUIRE(c8.getRegisters().V[0] == 0b00000010);
+}
+
+
+TEST_CASE("run instruction SNE_VX_VY, not equal") {
+    Chip8 c8{};
+    c8.getRegisters().V[0] = 0;
+    c8.getRegisters().V[1] = 1;
+    c8.runInstruction(0x1ff1);
+    c8.runInstruction(0x9010);
+    REQUIRE(0x0ff3 == c8.getRegisters().ProgramCounter);
+}
+
+TEST_CASE("run instruction SNE_VX_VY, equal") {
+    Chip8 c8{};
+    c8.getRegisters().V[0] = 0;
+    c8.getRegisters().V[1] = 0;
+    c8.runInstruction(0x1ff1);
+    c8.runInstruction(0x9010);
+    REQUIRE(0x0ff1 == c8.getRegisters().ProgramCounter);
+}
+
+
+
