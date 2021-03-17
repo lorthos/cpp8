@@ -61,11 +61,11 @@ void Update() {
     SDL_RenderPresent(mRenderer);
 
     if (c8.getRegisters().DelayTimer > 0) {
-        SDL_Delay(10);
+        SDL_Delay(1);
         c8.getRegisters().DelayTimer--;
     }
     if (c8.getRegisters().SoundTimer > 0) {
-        SDL_Delay(10);
+        SDL_Delay(1);
         Mix_PlayChannel(-1, beepSound, 0);
         c8.getRegisters().SoundTimer--;
     }
