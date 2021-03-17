@@ -1,7 +1,3 @@
-//
-// Created by lorthos on 15.03.21.
-//
-
 #include "Display.h"
 #include <algorithm>
 #include <assert.h>

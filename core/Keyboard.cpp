@@ -1,7 +1,3 @@
-//
-// Created by lorthos on 15.03.21.
-//
-
 #include <assert.h>
 #include "Keyboard.h"
 #include <algorithm>
@@ -10,17 +6,17 @@ Keyboard::Keyboard() {
     std::fill_n(state, KEYBOARD_SIZE, false);
 }
 
-void Keyboard::kDown(int key) {
+void Keyboard::setDown(int key) {
     checkState(key);
     state[key] = true;
 }
 
-void Keyboard::kUp(int key) {
+void Keyboard::setUp(int key) {
     checkState(key);
     state[key] = false;
 }
 
-bool Keyboard::kIsDown(int key) {
+bool Keyboard::IsDown(int key) {
     checkState(key);
     return state[key];
 }

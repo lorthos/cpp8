@@ -1,7 +1,3 @@
-//
-// Created by lorthos on 15.03.21.
-//
-
 #pragma once
 
 #include <unordered_map>
@@ -14,20 +10,21 @@
 class Keyboard {
 public:
     static const int KEYBOARD_SIZE = 16;
+
     Keyboard();
 
-    void kDown(int key);
+    void setDown(int key);
 
-    void kUp(int key);
+    void setUp(int key);
 
-    bool kIsDown(int key);
+    bool IsDown(int key);
 
     int lookUpDesktopKey(int desktopKey);
 
     int waitForKeyPress();
 
 private:
-    void checkState(int key);
+    static void checkState(int key);
 
     bool state[KEYBOARD_SIZE];
     int desktopBindings[KEYBOARD_SIZE]

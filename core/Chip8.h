@@ -47,7 +47,7 @@ public:
     };
 
 private:
-    void loadPrecondition(long size);
+    static void loadPrecondition(long size);
     void runInstruction(bit16 opcode);
     void runInstructionBasic(bit16 opcode);
     void runInstruction8SET(bit16 opcode);
@@ -71,7 +71,9 @@ private:
     Display mDisplay;
 
     //random
-    bit8 getRand();
+    static bit8 getRand();
+
+    bool pausedForInput = false;
 
 
 };

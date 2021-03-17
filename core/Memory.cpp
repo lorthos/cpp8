@@ -1,7 +1,3 @@
-//
-// Created by lorthos on 15.03.21.
-//
-
 #include "Memory.h"
 #include <assert.h>
 #include <algorithm>

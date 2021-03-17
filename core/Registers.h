@@ -11,8 +11,6 @@ public:
     bit8 V[16];
     bit16 IRegister = 0;
     bit16 ProgramCounter = 0;
-    //TODO can be removed
-    bit8 StackPointer = 0;
     bit8 SoundTimer = 0;
     bit8 DelayTimer = 0;
 

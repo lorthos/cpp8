@@ -40,11 +40,11 @@ TEST_CASE("Stack Round trip") {
 
 TEST_CASE("Keyboard State") {
     Chip8 c8{};
-    REQUIRE(c8.getKeyboard().kIsDown(0) == 0);
-    c8.getKeyboard().kDown(0);
-    REQUIRE(c8.getKeyboard().kIsDown(0) == 1);
-    c8.getKeyboard().kUp(0);
-    REQUIRE(c8.getKeyboard().kIsDown(0) == 0);
+    REQUIRE(c8.getKeyboard().IsDown(0) == 0);
+    c8.getKeyboard().setDown(0);
+    REQUIRE(c8.getKeyboard().IsDown(0) == 1);
+    c8.getKeyboard().setUp(0);
+    REQUIRE(c8.getKeyboard().IsDown(0) == 0);
 }
 
 TEST_CASE("default sprites") {

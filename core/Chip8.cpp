@@ -12,13 +12,11 @@ Chip8::Chip8() {
 void Chip8::sPush(bit16 val) {
     mStack.push(val);
     checkStackBoundary();
-    mRegisters.StackPointer++;
 }
 
 bit16 Chip8::sPop() {
     auto val = mStack.top();
     mStack.pop();
-    mRegisters.StackPointer--;
     return val;
 }
 
@@ -34,7 +32,6 @@ void Chip8::loadRom(const char *rom, long size) {
 
 void Chip8::loadPrecondition(long size) {
     assert(size + LOAD_ADDRESS < Memory::MEMORY_SIZE);
-
 }
 
 std::pair<char *, long> Chip8::readRom(const std::string &romPath) {
@@ -188,13 +185,13 @@ void Chip8::runInstructionBasic(unsigned short opcode) {
         case 0xE000: {
             switch (opcode & 0x00ff) {
                 case 0x9e:
-                    if (getKeyboard().kIsDown(getRegisters().V[Vx])) {
+                    if (getKeyboard().IsDown(getRegisters().V[Vx])) {
                         gotoNextInstruction();
                     }
                     break;
 
                 case 0xa1:
-                    if (!getKeyboard().kIsDown(getRegisters().V[Vx])) {
+                    if (!getKeyboard().IsDown(getRegisters().V[Vx])) {
                         gotoNextInstruction();
                     }
                     break;
@@ -282,7 +279,6 @@ void Chip8::runInstruction8SET(unsigned short opcode) {
 
 void Chip8::runInstructionFSET(unsigned short opcode) {
     bit8 Vx = (opcode >> 8) & 0x000f;
-    bit8 Vy = (opcode >> 4) & 0x000f;
     switch (opcode & 0x00ff) {
         //Fx07 - LD Vx, DT
         //Set Vx = delay timer value.
@@ -316,7 +312,7 @@ void Chip8::runInstructionFSET(unsigned short opcode) {
             //Fx29 - LD F, Vx
             //Set I = location of sprite for digit Vx.
         case 0x29:
-            getRegisters().IRegister = getRegisters().V[Vx] * getDisplay().DISPLAY_HEIGHT;
+            getRegisters().IRegister = getRegisters().V[Vx] * Display::DISPLAY_HEIGHT;
             break;
 
             //Fx33 - LD B, Vx
