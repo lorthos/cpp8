@@ -3,3 +3,4 @@
 *.jpr
 roms/*
 cmake-build-debug
+build/

@@ -2,7 +2,6 @@
 
 #include <unordered_map>
 #include <SDL.h>
-#include <SDL_system.h>
 
 /**
  * http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#2.3

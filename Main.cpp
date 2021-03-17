@@ -1,9 +1,12 @@
 #include <SDL.h>
-#include <SDL_system.h>
 #include <SDL_mixer.h>
 #include <string>
 #include "Chip8.h"
 #include "Display.h"
+
+#ifdef EMSCRIPTEN
+#include <emscripten/emscripten.h>
+#endif
 
 SDL_Window *mWindow;
 SDL_Renderer *mRenderer;
@@ -38,10 +41,9 @@ bool InitializeWindow(int xres, int yres) {
             SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
             xres,
             yres,
-            SDL_WINDOW_SHOWN |
-            SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_OPENGL);
+            SDL_WINDOW_SHOWN);
 
-    mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_TEXTUREACCESS_TARGET);
+    mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED);
 
 
     if (!mWindow) {
@@ -111,6 +113,16 @@ int ProcessInput() {
     return k;
 }
 
+void runLoop() {
+    while (IsRunning) {
+        // process input
+        ProcessInput();
+        // update state
+        // generate output
+        Update();
+    }
+}
+
 
 int main(int argc, char **argv) {
 
@@ -124,14 +136,11 @@ int main(int argc, char **argv) {
     const std::pair<char *, long> &pair = Chip8::readRom("./roms/PONG");
     c8.loadRom(pair.first, pair.second);
 
-    while (IsRunning) {
-        // process input
-        ProcessInput();
-        // update state
-        // generate output
-        Update();
-    }
-
+#ifdef EMSCRIPTEN
+    emscripten_set_main_loop(runLoop, -1, 1);
+#else
+    runLoop();
+#endif
 
     SDL_DestroyRenderer(mRenderer);
     SDL_DestroyWindow(mWindow);
