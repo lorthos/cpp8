@@ -13,7 +13,7 @@ public:
 
     bit8 get(int index);
 
-    void copyTo(const char *rom, long size, int startAddress = 0);
+    void copyFrom(const char *rom, long size, int startAddress = 0);
 
     bit16 getOpCode(int index);
 

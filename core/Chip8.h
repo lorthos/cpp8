@@ -9,6 +9,7 @@
 #include "Display.h"
 
 
+
 class Chip8 {
 public:
     Chip8();
@@ -50,6 +51,8 @@ private:
     void runInstruction(bit16 opcode);
     void runInstructionBasic(bit16 opcode);
     void runInstruction8SET(bit16 opcode);
+    void gotoNextInstruction();
+    void runInstructionFSET(bit16 opcode);
 
     //memory
     Memory mMemory{};
@@ -66,5 +69,9 @@ private:
 
     //display
     Display mDisplay;
+
+    //random
+    bit8 getRand();
+
 
 };

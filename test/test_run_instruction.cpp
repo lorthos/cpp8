@@ -211,5 +211,68 @@ TEST_CASE("run instruction SNE_VX_VY, equal") {
     REQUIRE(0x0ff1 == c8.getRegisters().ProgramCounter);
 }
 
+TEST_CASE("get rand") {
+    Chip8 c8{};
+    for (int i = 0; i < 500; ++i) {
+        unsigned char x = c8.getRand();
+        REQUIRE(0 <= x);
+        REQUIRE(x < 256);
+    }
+}
+
+TEST_CASE("draw instruction") {
+    Chip8 c8{};
+    c8.getRegisters().IRegister = 0;
+    c8.getRegisters().V[0] = 50;
+    c8.getRegisters().V[2] = 50;
+    c8.runInstruction(0xD025);
+}
+
+TEST_CASE("0x33") {
+    Chip8 c8{};
+    c8.getRegisters().IRegister = 0x201;//hope its empty
+    REQUIRE(c8.getMemory().get(c8.getRegisters().IRegister) == 0);
+    REQUIRE(c8.getMemory().get(c8.getRegisters().IRegister + 1) == 0);
+    REQUIRE(c8.getMemory().get(c8.getRegisters().IRegister + 2) == 0);
+    c8.getRegisters().V[0] = 128;
+    c8.runInstruction(0xF033);
+    REQUIRE(c8.getMemory().get(c8.getRegisters().IRegister) == 1);
+    REQUIRE(c8.getMemory().get(c8.getRegisters().IRegister + 1) == 2);
+    REQUIRE(c8.getMemory().get(c8.getRegisters().IRegister + 2) == 8);
+
+}
+
+TEST_CASE("0x55") {
+    Chip8 c8{};
+    c8.getRegisters().IRegister = 0x201;//hope its empty
+    REQUIRE(c8.getMemory().get(c8.getRegisters().IRegister) == 0);
+    REQUIRE(c8.getMemory().get(c8.getRegisters().IRegister + 1) == 0);
+    REQUIRE(c8.getMemory().get(c8.getRegisters().IRegister + 2) == 0);
+    c8.getRegisters().V[0] = 0;
+    c8.getRegisters().V[1] = 1;
+    c8.getRegisters().V[2] = 2;
+    c8.runInstruction(0xF255);
+    REQUIRE(c8.getMemory().get(c8.getRegisters().IRegister) == 0);
+    REQUIRE(c8.getMemory().get(c8.getRegisters().IRegister + 1) == 1);
+    REQUIRE(c8.getMemory().get(c8.getRegisters().IRegister + 2) == 2);
+}
+
+TEST_CASE("0x65") {
+    Chip8 c8{};
+    c8.getRegisters().IRegister = 0x201;//hope its empty
+    c8.getMemory().set(c8.getRegisters().IRegister, 5);
+    c8.getMemory().set(c8.getRegisters().IRegister + 1, 6);
+    c8.getMemory().set(c8.getRegisters().IRegister + 2, 7);
+    c8.getRegisters().V[0] = 0;
+    c8.getRegisters().V[1] = 0;
+    c8.getRegisters().V[2] = 0;
+    c8.runInstruction(0xF265);
+    REQUIRE(c8.getRegisters().V[0] == 5);
+    REQUIRE(c8.getRegisters().V[1] == 6);
+    REQUIRE(c8.getRegisters().V[2] == 7);
+}
+
+
+
 
 

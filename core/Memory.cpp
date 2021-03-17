@@ -26,7 +26,7 @@ void Memory::mPrecondition(int index) {
     assert(index >= 0 && index < MEMORY_SIZE);
 }
 
-void Memory::copyTo(const char *rom, long size, int startAddress) {
+void Memory::copyFrom(const char *rom, long size, int startAddress) {
     std::memcpy(&heap[startAddress], rom, size);
 }
 

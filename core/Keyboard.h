@@ -14,6 +14,7 @@
 class Keyboard {
 public:
     static const int KEYBOARD_SIZE = 16;
+    Keyboard();
 
     void kDown(int key);
 
@@ -23,7 +24,7 @@ public:
 
     int lookUpDesktopKey(int desktopKey);
 
-    Keyboard();
+    int waitForKeyPress();
 
 private:
     void checkState(int key);

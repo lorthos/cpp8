@@ -1,11 +1,11 @@
 #include <cassert>
 #include "Chip8.h"
 #include <fstream>
+#include <random>
 
 #define LOAD_ADDRESS 0x200
 
 Chip8::Chip8() {
-
 }
 
 
@@ -28,7 +28,7 @@ void Chip8::checkStackBoundary() {
 
 void Chip8::loadRom(const char *rom, long size) {
     loadPrecondition(size);
-    mMemory.copyTo(rom, size, LOAD_ADDRESS);
+    mMemory.copyFrom(rom, size, LOAD_ADDRESS);
     getRegisters().ProgramCounter = LOAD_ADDRESS;
 }
 
@@ -53,7 +53,7 @@ std::pair<char *, long> Chip8::readRom(const std::string &romPath) {
 
 void Chip8::tick() {
     unsigned short opCode = getMemory().getOpCode(getRegisters().ProgramCounter);
-    getRegisters().ProgramCounter += 2;
+    gotoNextInstruction();
     runInstruction(opCode);
 }
 
@@ -88,6 +88,7 @@ void Chip8::runInstructionBasic(unsigned short opcode) {
     bit8 Vx = (opcode >> 8) & 0x000f;
     bit8 Vy = (opcode >> 4) & 0x000f;
     bit8 kk = opcode & 0x00ff;
+    bit8 n = opcode & 0x000f;
     std::random_device engine;
     switch (opcode & 0xf000) {
         //1nnn - JP addr
@@ -107,7 +108,7 @@ void Chip8::runInstructionBasic(unsigned short opcode) {
             //Skip next instruction if Vx = kk.
         case 0x3000:
             if (getRegisters().V[Vx] == kk) {
-                getRegisters().ProgramCounter += 2;
+                gotoNextInstruction();
             }
             break;
 
@@ -115,7 +116,7 @@ void Chip8::runInstructionBasic(unsigned short opcode) {
             //Skip next instruction if Vx != kk.
         case 0x4000:
             if (getRegisters().V[Vx] != kk) {
-                getRegisters().ProgramCounter += 2;
+                gotoNextInstruction();
             }
             break;
 
@@ -124,7 +125,7 @@ void Chip8::runInstructionBasic(unsigned short opcode) {
             // Skip next instruction if Vx = Vy.
         case 0x5000:
             if (getRegisters().V[Vx] == getRegisters().V[Vy]) {
-                getRegisters().ProgramCounter += 2;
+                gotoNextInstruction();
             }
             break;
 
@@ -147,7 +148,7 @@ void Chip8::runInstructionBasic(unsigned short opcode) {
             //SNE_VX_VY
         case 0x9000:
             if (getRegisters().V[Vx] != getRegisters().V[Vy]) {
-                getRegisters().ProgramCounter += 2;
+                gotoNextInstruction();
             }
             break;
 
@@ -165,9 +166,44 @@ void Chip8::runInstructionBasic(unsigned short opcode) {
 
             //Cxkk - RND Vx, byte
             //Set Vx = random byte AND kk.
+            //TODO not tested
         case 0xC000:
-            //TODO
-            unsigned x = engine();
+            getRegisters().V[Vx] = getRand() & kk;
+            break;
+
+            //Dxyn - DRW Vx, Vy, nibble
+            //Display n-byte sprite starting at memory location I at (Vx, Vy), set VF = collision.
+        case 0xD000:
+            //n is the sprite height
+            getRegisters().V[0x0f] = getDisplay().DrawSprite(
+                    getRegisters().V[Vx],
+                    getRegisters().V[Vy],
+                    getRegisters().IRegister,
+                    n,
+                    getMemory());
+            break;
+
+            //Ex9E - SKP Vx
+            //Skip next instruction if key with the value of Vx is pressed.
+        case 0xE000: {
+            switch (opcode & 0x00ff) {
+                case 0x9e:
+                    if (getKeyboard().kIsDown(getRegisters().V[Vx])) {
+                        gotoNextInstruction();
+                    }
+                    break;
+
+                case 0xa1:
+                    if (!getKeyboard().kIsDown(getRegisters().V[Vx])) {
+                        gotoNextInstruction();
+                    }
+                    break;
+            }
+        }
+            break;
+
+        case 0xF000:
+            runInstructionFSET(opcode);
             break;
 
         default:
@@ -244,5 +280,89 @@ void Chip8::runInstruction8SET(unsigned short opcode) {
     }
 }
 
+void Chip8::runInstructionFSET(unsigned short opcode) {
+    bit8 Vx = (opcode >> 8) & 0x000f;
+    bit8 Vy = (opcode >> 4) & 0x000f;
+    switch (opcode & 0x00ff) {
+        //Fx07 - LD Vx, DT
+        //Set Vx = delay timer value.
+        case 0x07:
+            getRegisters().V[Vx] = getRegisters().DelayTimer;
+            break;
+            //Fx0A - LD Vx, K
+            //Wait for a key press, store the value of the key in Vx.
+        case 0x0A:
+            getRegisters().V[Vx] = getKeyboard().waitForKeyPress();
+            break;
+
+            //Fx15 - LD DT, Vx
+            //Set delay timer = Vx.
+        case 0x15:
+            getRegisters().DelayTimer = getRegisters().V[Vx];
+            break;
+
+            //Fx18 - LD ST, Vx
+            //Set sound timer = Vx.
+        case 0x18:
+            getRegisters().SoundTimer = getRegisters().V[Vx];
+            break;
+
+            //Fx1E - ADD I, Vx
+            //Set I = I + Vx.
+        case 0x1E:
+            getRegisters().IRegister = getRegisters().IRegister + getRegisters().V[Vx];
+            break;
+
+            //Fx29 - LD F, Vx
+            //Set I = location of sprite for digit Vx.
+        case 0x29:
+            getRegisters().IRegister = getRegisters().V[Vx] * getDisplay().DISPLAY_HEIGHT;
+            break;
+
+            //Fx33 - LD B, Vx
+            //Store BCD representation of Vx in memory locations I, I+1, and I+2.
+        case 0x33: {
+            bit8 hundreds = getRegisters().V[Vx] / 100;
+            bit8 tens = getRegisters().V[Vx] / 10 % 10;
+            bit8 units = getRegisters().V[Vx] % 10;
+            getMemory().set(getRegisters().IRegister, hundreds);
+            getMemory().set(getRegisters().IRegister + 1, tens);
+            getMemory().set(getRegisters().IRegister + 2, units);
+        }
+            break;
+
+            //Fx55 - LD [I], Vx
+            //Store registers V0 through Vx in memory starting at location I.
+        case 0x55:
+            for (int i = 0; i <= Vx; ++i) {
+                getMemory().set(getRegisters().IRegister+i, getRegisters().V[i]);
+            }
+            break;
+
+            //Fx65 - LD Vx, [I]
+            //Read registers V0 through Vx from memory starting at location I.
+        case 0x65:
+            for (int i = 0; i <= Vx; ++i) {
+                getRegisters().V[i] = getMemory().get(getRegisters().IRegister+i);
+            }
+            break;
+
+        default:
+            break;
+
+    }
+}
+
+//TODO fix
+bit8 Chip8::getRand() {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> distr(0, 255);
+    return distr(gen);
+}
+
+void Chip8::gotoNextInstruction() {
+    getRegisters().ProgramCounter += 2;
+}
 
 

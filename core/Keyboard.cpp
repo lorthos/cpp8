@@ -38,4 +38,16 @@ int Keyboard::lookUpDesktopKey(int desktopKey) {
     return -1;
 }
 
+int Keyboard::waitForKeyPress() {
+    SDL_Event event;
+    while (SDL_WaitEvent(&event)) {
+        if (event.type != SDL_KEYDOWN) {
+            continue;
+        }
+        int k = event.key.keysym.sym;
+        return lookUpDesktopKey(k);
+    }
+    return 0;
+}
+
 
