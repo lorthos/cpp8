@@ -1,12 +1,13 @@
+#ifdef EMSCRIPTEN
+#include <emscripten/emscripten.h>
+#endif
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include <string>
 #include "Chip8.h"
 #include "Display.h"
 
-#ifdef EMSCRIPTEN
-#include <emscripten/emscripten.h>
-#endif
+
 
 SDL_Window *mWindow;
 SDL_Renderer *mRenderer;
