@@ -134,7 +134,7 @@ int main(int argc, char **argv) {
     InitializeAudio("./assets/sfx_sounds_Blip1.wav");
 
 
-    const std::pair<char *, long> &pair = Chip8::readRom("./roms/PONG");
+    const std::pair<char *, long> &pair = Chip8::readRom("./roms/INVADERS");
     c8.loadRom(pair.first, pair.second);
 
 #ifdef EMSCRIPTEN
