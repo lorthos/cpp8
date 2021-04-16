@@ -8,3 +8,6 @@ wasm2:
 
 wasm3:
 	cd build;python3 -m http.server 8000
+
+run:
+	cmake-build-debug/cpp8 ./roms/$(game)

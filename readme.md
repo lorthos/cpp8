@@ -2,7 +2,7 @@
 
 ![alt text](doc/invaders.png "Space Invaders")
 
-A Chip-8 emulator. 
+A Chip-8 emulator.
 
 ## Resources
 
@@ -12,8 +12,12 @@ A Chip-8 emulator.
 - https://opengameart.org/content/512-sound-effects-8-bit-style
 - https://itch.io/jam/octojam-6
 
-## TODO
 
+## Usage
+
+    make game=INVADERS run
+
+## TODO
 - scanline effect
 - debug gui
 - bugs in some roms
